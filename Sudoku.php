@@ -71,7 +71,7 @@ class Sudoku {
         $vals = $values[$sq];
         for ($i = 0; $i < strlen($vals); $i++) {
             if ($vals{$i} != $dig) {
-                $result = $result & ($this->eliminate(&$values, $sq, $vals{$i}) ? true : false);
+                $result = $result & ($this->eliminate($values, $sq, $vals{$i}) ? true : false);
             }
         }
         return ($result ? $values : false);
@@ -90,7 +90,7 @@ class Sudoku {
     private function eliminate(&$values, $sq, $dig) {
         $this->neliminations++;
 
-        if (strpos($values[$sq], $dig) === false) {
+        if (empty($dig) OR strpos($values[$sq], $dig) === false) {
             return $values;
         }
 
@@ -101,7 +101,7 @@ class Sudoku {
         elseif (strlen($values[$sq]) == 1) {
             $result = true;
             foreach ($this->peers[$sq] as $s => $foo) {
-                $result = $result & ($this->eliminate(&$values, $s, $values[$sq]) ? true : false);
+                $result = $result & ($this->eliminate($values, $s, $values[$sq]) ? true : false);
             }
             if (!$result) {
                 return false;
@@ -120,7 +120,7 @@ class Sudoku {
                 return false;
             }
             elseif (sizeof($dplaces) == 1) {
-                if (!$this->assign(&$values, $dplaces[0], $dig)) {
+                if (!$this->assign($values, $dplaces[0], $dig)) {
                     return false;
                 }
             }
@@ -145,7 +145,7 @@ class Sudoku {
             $values[$this->squares[$i]] = $this->digits;
         }
         for ($i = 0; $i < sizeof($this->squares); $i++) {
-            if (strpos($this->digits, $grid2{$i}) !== false AND !$this->assign(&$values, $this->squares[$i], $grid2{$i})) {
+            if (strpos($this->digits, $grid2{$i}) !== false AND !$this->assign($values, $this->squares[$i], $grid2{$i})) {
                 return false;
             }
         }
